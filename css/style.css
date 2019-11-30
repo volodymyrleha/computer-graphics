@@ -1,0 +1,160 @@
+/** BG IMAGE STARTS**/
+	.bg-img {
+		height: 100vh;
+		width: 100vw;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		position: relative;
+	}
+
+	.bg-text {
+		position: absolute;
+		width: 100%;
+		left: 0;
+		bottom: 20vh;
+		text-align: center;
+		font-size: 66px;
+		font-style: italic;
+		color: #343434;
+		background-color: rgba(255,255,255, .9);
+	}
+/** BG IMAGE ENDED**/
+
+/** TEXT STARTS **/
+	h1 {
+		font-size: 54px;
+		font-weight: 900;
+		font-style: italic;
+		color: #343434;
+	}
+
+	p {
+		font-size: 30px;
+		font-style: italic;
+	}
+
+	.logo-text {
+		font-size: 88px;
+		color: #343434;
+		font-style: italic;
+		text-align: center;
+	}
+
+	.red-text {
+		color: #AC2424;
+	}
+
+	.link {
+		text-decoration: none;
+		font-size: 28px;
+		font-style: italic;
+		color: #343434;
+		transition: .3s;
+	}
+
+	.link:hover {
+		text-decoration: none;
+		color: #AC2424;
+		transition: .3s;
+	}
+/** TEXT ENDED **/ 
+
+/** INPUT STARTS **/
+	.text-input {
+		border: none;
+		background-color: #F9F9F9;
+		padding: 8px 24px;
+		font-size: 28px;
+		color: #343434;
+		font-style: italic;
+	}
+
+	.number-input {
+		border: 2px solid #AC2424;
+		padding: 0px 4px;
+		font-size: 22px;
+		color: #343434;
+		font-style: italic;
+		text-align: right;
+	}
+
+	select {
+		border: none;
+		border-bottom: 2px solid #AC2424;
+		padding: 8px 0px;
+		font-size: 22px;
+		color: #343434;
+		cursor: pointer;
+	}
+/** INPUT ENDED **/
+
+/** BUTTONS STARTS **/
+	.button-red {
+		border: 3px solid #AC2424;
+		color: #AC2424;
+		padding: 8px 24px;
+		text-align: center;
+		font-size: 28px;
+		font-style: italic;
+		transition: .3s;
+		cursor: pointer;
+		text-decoration: none !important;
+	}
+
+	.button-red:hover {
+		color: white;
+		background-color: #AC2424;
+		transition: .3s;
+		text-decoration: none !important;
+	}
+
+	.button-black {
+		border: 3px solid #343434;
+		color: #343434;
+		padding: 8px 24px;
+		text-align: center;
+		font-size: 28px;
+		font-style: italic;
+		transition: .3s;
+		cursor: pointer;
+		text-decoration: none !important;
+	}
+
+	.button-black:hover {
+		color: white;
+		background-color: #343434;
+		transition: .3s;
+		text-decoration: none !important;
+	}
+
+	.button-underlined {
+		text-align: center;
+		text-decoration: underline;
+		letter-spacing: 2px;
+		color: #343434;
+		font-size: 28px;
+		font-style: italic;
+		transition: .3s;
+		cursor: pointer;
+	}
+
+	.button-underlined:hover {
+		color: #343434;
+	}
+/** BUTTONS ENDS **/
+
+.right-part {
+	background-color: #F6F6F6;
+	position: relative;
+}
+
+.right-part p {
+	position: absolute;
+	top: 43%;
+	left: 30%;
+	font-size: 30px;
+	color: #343434;
+	opacity: .33;
+	z-index: 0;
+}
