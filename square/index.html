@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Le Ben | Square Movement</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+      	<link rel="stylesheet" type="text/css" href="css/style.css">
+      	<script src="https://kit.fontawesome.com/7b3bc95d54.js" crossorigin="anonymous"></script>
+	</head>
+	<body style="overflow-x: hidden;">
+		<div class="row">
+			<div class="col-4 px-5 pt-4">
+				<div class="d-flex justify-content-between">
+					<a class="link" href="../main/index.html"><i class="fas fa-long-arrow-alt-left" style="font-size: 54px;"></i></a>
+					<a class="link" href="#"><i class="fas fa-question" style="font-size: 48px;"></i></a>
+				</div>
+				<h1>Square</h1>
+				<p class="mt-4 mb-3">Diagonal:</p>
+				<div class="d-flex flex-row mt-4">
+					<p class="mb-0 mr-3">x0:</p>
+					<input class="number-input w-100" type="number" id="dx0" value="0" step="1"/>
+					<p class="mb-0 mx-3">y0:</p>
+					<input class="number-input w-100" type="number" id="dy0" value="0" step="1"/>	
+				</div>
+				<div class="d-flex flex-row mt-4">
+					<p class="mb-0 mr-3">x1:</p>
+					<input class="number-input w-100" type="number" id="dx1" value="1" step="1"/>
+					<p class="mb-0 mx-3">y1:</p>
+					<input class="number-input w-100" type="number" id="dy1" value="1" step="1"/>	
+				</div>
+				<p class="mt-4 mb-3"><input class="mr-3 check_affine" type="checkbox" name="affine" value="Offset">Offset:</p>
+				<div class="d-flex flex-row mt-4">
+					<p class="mb-0 mr-3">x:</p>
+					<input class="number-input w-100" type="number" id="offset_x" value="0" step="1"/>
+					<p class="mb-0 mx-3">y:</p>
+					<input class="number-input w-100" type="number" id="offset_y" value="0" step="1"/>	
+				</div>
+				<p class="mt-4 mb-3"><input class="mr-3 check_affine" type="checkbox" name="affine" value="Scale">Scale:</p>
+				<div class="d-flex flex-row mt-4">
+					<p class="mb-0 mr-3">a:</p>
+					<input class="number-input w-100" type="number" id="scale_a" value="1" step="1"/>
+					<p class="mb-0 mx-3">d:</p>
+					<input class="number-input w-100" type="number" id="scale_d" value="1" step="1"/>	
+				</div>
+				<p class="mt-4 mb-3"><input class="mr-3 check_affine" type="checkbox" name="affine" value="Rotate">Rotate:</p>
+				<div class="d-flex flex-row mt-4">
+					<p class="mb-0 mr-3">Degrees:</p>
+					<input class="number-input w-100" type="number" id="rotate_val" value="0" step="1"/>
+				</div>
+				<p class="mt-4 mb-3">Affines order:</p>
+				<select id="affine_order" class="w-100">
+					<option disabled selected value>None</option>
+				</select>
+				<div id="generate_btn" class="button-red w-100 my-5">Generate</div>
+			</div>
+			<div class="col-8 px-0 mx-0 right-part">
+				<div style="position: fixed; top: 0; right: 0; width: calc(100% / 12 * 8); height: 100%;">
+					<p id="p_hide">Click "Generate" to create a square</p>
+					<a download="square.jpg" href="" onclick="download_img(this);"><i class="fas fa-file-download download-icon"></i></a>
+					<div id="canvasContainer">
+						<canvas id="canvas"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/jquery-3.4.1.min.js"></script>
+		<script src="js/bootstrap.bundle.min.js"></script>		
+		<script src="js/main.js"></script>
+		<script type="text/javascript" src="js/download-canvas.js"></script>
+
+		<script>
+			$(document).ready(function() {
+				$("#generate_btn").click(function() {
+					draw();
+				});
+
+				var check_if_click = false;
+				$('#affine_order').prop('disabled', true);
+
+				$('.check_affine').click(function() {
+					$("#affine_order").empty();
+
+					check_if_click = false;
+					var options = [];
+
+					$('.check_affine').each(function() {
+						if ($(this).prop('checked') == true) {
+							check_if_click = true;
+							options.push($(this).val());
+						}
+					});
+
+					
+					if (options.length == 3) {
+						$("#affine_order").append('<option value="osr">1. Offset | 2. Scale | 3. Rotate</option>');
+						$("#affine_order").append('<option value="ors">1. Offset | 2. Rotate | 3. Scale</option>');
+						$("#affine_order").append('<option value="sor">1. Scale | 2. Offset | 3. Rotate</option>');
+						$("#affine_order").append('<option value="sro">1. Scale | 2. Rotate | 3. Offset</option>');
+						$("#affine_order").append('<option value="rso">1. Rotate | 2. Scale | 3. Offset</option>');
+						$("#affine_order").append('<option value="ros">1. Rotate | 2. Offset | 3. Scale</option>');
+
+					} else if (options.length == 2) {
+						$("#affine_order").append('<option value="' + options[0][0].toLowerCase() + options[1][0].toLowerCase() + '">1. ' + options[0] + ' | 2. ' + options[1] + ' </option>');
+						$("#affine_order").append('<option value="' + options[1][0].toLowerCase() + options[0][0].toLowerCase() + '">1. ' + options[1] + ' | 2. ' + options[0] + ' </option>');
+					} else if (options.length == 1) {
+						$("#affine_order").append('<option value="' + options[0][0].toLowerCase() + '">1. ' + options[0] + ' </option>');
+					}
+
+					if (check_if_click) {
+						$('#affine_order').prop('disabled', false);
+						$("#affine_order").append('<option disabled selected value>Select Me!</option>');
+					} else {
+						$('#affine_order').prop('disabled', true);
+						$("#affine_order").append('<option disabled selected value>None</option>');
+					}
+				});
+
+			});
+		</script>
+	</body>
+</html>

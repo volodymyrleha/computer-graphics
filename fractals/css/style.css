@@ -142,6 +142,21 @@
 	.button-underlined:hover {
 		color: #343434;
 	}
+
+	.download-icon {
+		position: absolute;
+		color: #343434;
+		right: 44px;
+		top: 24px;
+		font-size: 48px;
+		cursor: pointer;
+		transition: .3s;
+	}
+
+	.download-icon:hover {
+		color: #AC2424;
+		transition: .3s;
+	}
 /** BUTTONS ENDS **/
 
 .right-part {
@@ -158,3 +173,4 @@
 	opacity: .33;
 	z-index: 0;
 }
+

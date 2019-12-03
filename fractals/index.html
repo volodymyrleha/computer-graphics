@@ -42,8 +42,9 @@
 			</div>
 			<div class="col-8 px-0 mx-0 right-part">
 				<p id="p_hide">Click "Generate" to create a fractal</p>
+				<a download="myImage.jpg" href="" onclick="download_img(this);"><i class="fas fa-file-download download-icon"></i></a>
 				<div id="canvasContainer">
-					<canvas id="canvasMandelbrot"></canvas>
+					<canvas id="canvas"></canvas>
 				</div>
 			</div>
 		</div>
@@ -53,6 +54,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.6.0/math.min.js"></script>
 		<script src="js/main.js"></script>
 		<script type="text/javascript" src="js/mandelbrot.js"></script>
+		<script type="text/javascript" src="js/download-canvas.js"></script>
 
 		<script>
 			$(document).ready(function() {

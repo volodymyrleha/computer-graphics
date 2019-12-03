@@ -160,6 +160,10 @@
 /** BUTTONS ENDS **/
 
 .right-part {
+	position: relative;
+	width: calc(100% / 12 * 8);
+	top: 0;
+	right: 0;
 	background-color: #F6F6F6;
 	position: relative;
 }
@@ -167,10 +171,25 @@
 .right-part p {
 	position: absolute;
 	top: 43%;
-	left: 30%;
+	right: 0;
+	width: 100%;
+	text-align: center;
 	font-size: 30px;
 	color: #343434;
 	opacity: .33;
 	z-index: 0;
 }
 
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #AC2424; 
+}
