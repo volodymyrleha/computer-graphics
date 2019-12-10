@@ -1,26 +1,36 @@
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
+
+canvas.width  = window.innerWidth / 12 * 8;
+canvas.height = window.innerHeight;
+
+var width = canvas.width;
+var height = canvas.height;
+
+var x0 = canvas.width/2;
+var y0 = canvas.height/2;
+var step = 50;
+
+var square_matrix = [];
+
+get_square(square_matrix, step, x0, y0);
+
+var square_matrix2 = [];
+
+
 function draw() {
   if (check_if_posiible()) {
+    square_matrix = [];
+    get_square(square_matrix, step, x0, y0);
+    square_matrix2 = [];
+
     document.getElementById("p_hide").style.display = "none";
 
-    var canvas = document.querySelector('canvas');
-    var ctx = canvas.getContext('2d');
-
-    canvas.width  = window.innerWidth / 12 * 8;
-    canvas.height = window.innerHeight;
-
-    var width = canvas.width;
-    var height = canvas.height;
-
-    var x0 = canvas.width/2;
-    var y0 = canvas.height/2;
-    var step = 50;
+    for (var i = 0; i < square_matrix.length; i++) {
+      square_matrix2.push([square_matrix[i][0], square_matrix[i][1], 1]);
+    }
 
     draw_graph(ctx, x0, y0, step);
-
-
-    var square_matrix = [];
-
-    get_square(square_matrix, step, x0, y0);
 
     $('#affine_order option').each(function() {
       if ($(this).is(':selected')) {
@@ -28,19 +38,45 @@ function draw() {
 
         for (var i = 0; i < order.length; i++) {
           if (order[i] == 'o') {
-            transfrom(square_matrix, step);
+            transfrom(square_matrix2, step);
 
           } else if (order[i] == 's') {
-            scale(square_matrix, step);
+            scale(square_matrix2, step);
 
           } else if (order[i] == 'r') {
-            rotate(square_matrix, step);
+            rotate(square_matrix2, step);
           }
         }
       } 
     });
 
-    draw_square(square_matrix, ctx, x0, y0);
+    anim(50);    
+  }
+}
+
+var startTime;
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+ }
+
+async function anim(duration) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  var temp_matrix = [];
+
+  for (var t = 1; t < duration; t++) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (var i = 0; i < square_matrix.length; i++) {
+      temp_matrix.push([(square_matrix2[i][0] - square_matrix[i][0]) / duration * t + square_matrix[i][0]
+                       , (square_matrix2[i][1] - square_matrix[i][1]) / duration * t + square_matrix[i][1], 1]);
+      
+    }
+
+    draw_graph(ctx, x0, y0, step);
+    draw_square(temp_matrix, ctx, x0, y0);
+    await sleep(2);
+    temp_matrix = [];
   }
 }
 
@@ -174,8 +210,29 @@ function check_if_posiible() {
   } else if ($("#dy1").val() - $("#dy0").val() 
              != $("#dx1").val() - $("#dx0").val()) {
     alert("It's not a square");
+    return false; 
 
   } else {
+    if ($("#dx1").val() >= 10 || $("#dx1").val() <= -10) {
+      alert("Coordinates needs to be from -10 to 10");
+      return false;
+    }
+
+    if ($("#dx0").val() >= 10 || $("#dx0").val() <= -10) {
+      alert("Coordinates needs to be from -10 to 10");
+      return false;
+    }
+
+    if ($("#dy1").val() >= 10 || $("#dy1").val() <= -10) {
+      alert("Coordinates needs to be from -10 to 10");
+      return false;
+    }
+
+    if ($("#y0").val() >= 10 || $("#y0").val() <= -10) {
+      alert("Coordinates needs to be from -10 to 10");
+      return false;
+    }
+
     return true;
   }
 }

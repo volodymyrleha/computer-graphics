@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Le Ben | Color Schemes</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+      	<link rel="stylesheet" type="text/css" href="css/style.css">
+      	<script src="https://kit.fontawesome.com/7b3bc95d54.js" crossorigin="anonymous"></script>
+	</head>
+	<body style="overflow-x: hidden;">
+		<div class="row">
+			<div class="col-4 px-5 pt-4">
+				<div class="d-flex justify-content-between">
+					<a class="link" href="../main/index.html"><i class="fas fa-long-arrow-alt-left" style="font-size: 54px;"></i></a>
+					<a class="link" href="#"><i class="fas fa-question" style="font-size: 48px;"></i></a>
+				</div>
+				<h1>Color Schemes</h1>
+				<div class="d-flex flex-row mt-4">
+					<p class="mb-0 mr-3">C:</p>
+					<input class="number-input w-100" type="number" id="test_c" value="1" step="1" max="100" min="0"/>
+				</div>
+				<div id="convert_btn" class="button-red w-100 my-5">Convert</div>
+				<label id="add_file_btn" class="button-red w-100 mb-5" for="add_file">Open File</label>
+				<input id="add_file" type="file" style="display: none;"/>
+				<p id="testxy" style="font-size: 18px;">X: Y:</p>
+				<p id="testrgb" style="font-size: 18px;">R: G: B:</p>
+				<p id="testhsv" style="font-size: 18px;">H: S: V:</p>
+				<p id="testcmyk" style="font-size: 18px;">C: M: Y: K:</p>
+				<p id="testcmyk" style="font-size: 18px;">First image - HSV, Second image - CMYK</p>
+			</div>
+			<div class="col-8 px-0 mx-0 right-part">
+				<div style="position: fixed; top: 0; right: 0; width: calc(100% / 12 * 8); height: 100%;">
+					<p id="p_hide">Click "Open Image" to open an image</p>
+					<a download="square.jpg" href="" onclick="download_img(this);"><i class="fas fa-file-download download-icon"></i></a>
+					<img id="test" style="opacity: 0; position: absolute;"/>
+					<div id="canvasContainer1">
+						<canvas id="canvas1"></canvas>
+					</div>
+					<div id="canvasContainer">
+						<canvas id="canvas"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/jquery-3.4.1.min.js"></script>
+		<script src="js/bootstrap.bundle.min.js"></script>		
+		<script src="js/main.js"></script>
+		<script type="text/javascript" src="js/download-canvas.js"></script>
+
+		<script>
+			var canvas = document.createElement('canvas');
+			var img = document.getElementById('test');
+
+			canvas.width = img.width;
+			canvas.height = img.height;
+			canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+
+			$("#test").mousemove(function(event) {
+				canvas.width = img.width;
+				canvas.height = img.height;
+				canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+
+				var offset = $("#test").offset();
+				$("#testxy").text("X: " + Math.round(event.pageX - $("#test").offset().left) + 
+					 			 " Y: " + Math.round(event.pageY - $("#test").offset().top));
+
+				var pixelData = canvas.getContext('2d').getImageData(
+												Math.round(event.pageX - $("#test").offset().left),
+												Math.round(event.pageY - $("#test").offset().top), 1, 1).data;
+
+				$("#testrgb").text("R:" + pixelData[0] +
+								   " G:" + pixelData[1] +
+								   " B:" + pixelData[2]);
+
+				var hsv = rgb_to_hsv(pixelData[0], pixelData[1], pixelData[2]);
+
+				$("#testhsv").text("H:" + hsv[0] +
+								   " S:" + hsv[1] +
+								   " V:" + hsv[2]);
+
+
+				var cmyk = hsv_to_cmyk(hsv[0], hsv[1], hsv[2]);
+
+				$("#testcmyk").text("C:" + cmyk[0] +
+								   " M:" + cmyk[1] +
+								   " Y:" + cmyk[2] +
+								   " K:" + cmyk[3]);
+
+				cmyk_to_rgb(cmyk[0], cmyk[1], cmyk[2], cmyk[3]);
+			});
+
+
+			$("#convert_btn").click(function() {
+				var canvas1 = document.getElementById('canvas');
+				var ctx = canvas1.getContext('2d');
+
+				canvas1.width = img.width;
+				canvas1.height = img.height;
+
+				var width = canvas1.width;
+				var height = canvas1.height;
+
+				console.log(img.width, height);
+
+				for (var i = 0; i < canvas1.width; i++) {
+					for (var k = 0; k < canvas1.height; k++) {
+						var pixelData = canvas.getContext('2d').getImageData(i, k, 1, 1).data;
+
+						var hsv = rgb_to_hsv(pixelData[0], pixelData[1], pixelData[2]);
+						var cmyk = hsv_to_cmyk(hsv[0], hsv[1], hsv[2]);
+						var rgb = cmyk_to_rgb($("#test_c").val(), cmyk[1], cmyk[2], cmyk[3]);
+
+						ctx.fillStyle = "rgba("+rgb[0]+","+rgb[1]+","+rgb[2]+","+255+")";
+						ctx.fillRect(i, k, 1, 1);
+					}
+				}
+			});
+			
+
+			var check = true;			
+
+			$('#add_file').on('change', function(ev) {
+			    var f = ev.target.files[0];
+			    var fr = new FileReader();
+			    
+			    fr.onload = function(ev2) {
+			        console.dir(ev2);
+			        $('#test').attr('src', ev2.target.result);
+			    };
+			    
+			    fr.readAsDataURL(f);
+
+			    $("#p_hide").css("display", "none");
+			    check = true;
+			});
+
+			$("#add_file_btn").mouseleave(function() {
+				canvas.width = img.width;
+				canvas.height = img.height;
+				canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+				if (check) {
+					draw_image('canvas');
+					draw_image('canvas1');
+					check = false;
+				}
+			});
+
+			function draw_image(canvas_id) {				
+				var canvas1 = document.getElementById(canvas_id);
+				var ctx = canvas1.getContext('2d');
+
+				canvas1.width = $("#test").width();
+				canvas1.height = img.height;
+
+				var width = canvas1.width;
+				var height = canvas1.height;
+
+				for (var i = 0; i < canvas1.width; i++) {
+					for (var k = 0; k < canvas1.height; k++) {
+
+						var pixelData = canvas.getContext('2d').getImageData(i, k, 1, 1).data;
+
+						var hsv = rgb_to_hsv(pixelData[0], pixelData[1], pixelData[2]);
+						var cmyk = hsv_to_cmyk(hsv[0], hsv[1], hsv[2]);
+						var rgb = cmyk_to_rgb(cmyk[0], cmyk[1], cmyk[2], cmyk[3]);
+
+						ctx.fillStyle = "rgba("+rgb[0]+","+rgb[1]+","+rgb[2]+","+255+")";
+						ctx.fillRect(i, k, 1, 1);
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
